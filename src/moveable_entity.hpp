@@ -49,9 +49,9 @@ public:
     int frames_since_last_wind8_move;
 };
 
-class MoveableEntity : Entity {
+class MoveableEntity : public Entity {
 public:
-    MoveableEntity(EntityAlignment alignment, std::variant<GridCellIndex, GridContinuousPosition> pos, const std::variant<Wind8Movement, float> &movement_angle, WallCollisionBehavior wcb) : Entity(alignment, pos), movement_angle(movement_angle), wcb(wcb) {}
+    MoveableEntity(EntityAlignment alignment, const std::variant<GridCellIndex, GridContinuousPosition> &pos, const std::variant<Wind8Movement, float> &movement_angle, WallCollisionBehavior wcb) : Entity(alignment, pos), movement_angle(movement_angle), wcb(wcb) {}
     void Move(const GridCellIndex &grid_dimensions, int fps);
     virtual void Update() = 0; // called each time the entity moves
 protected:
