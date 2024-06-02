@@ -3,13 +3,19 @@
 
 // abstract class for all moveable objects, which must also be drawable objects
 
-#include "drawable_object.hpp"
+#include "entity.hpp"
 #include "position.hpp"
 
-enum class MovementStyle {
-    Smooth,
+// the "smooth" option is indicated by EntityAlignment::Continuous -- these options specify between how 
+enum class DrawnMovementStyle {
     Sudden,
     SmoothDrawnSuddenLogic,
+};
+
+enum class WallCollisionBehavior {
+    Bounce,
+    Clamp,
+    Ignore,
 };
 
 enum class Wind8 {
@@ -23,16 +29,35 @@ enum class Wind8 {
     L,
     UL,
 };
+enum class Wind8Distance {
+    Zero,
+    One,
+    Sqrt2,
+};
+Wind8Distance Wind8_distance(Wind8 val);
+static const float SQRT2 = 1.41421356237;
+GridCellIndex Wind8_addable_movement(Wind8 val);
+Wind8 Wind8_mirror(bool over_x_axis, Wind8 val);
+float angledeg_mirror(bool over_x_axis, float val);
+
+class Wind8Movement {
+public:
+    Wind8Movement() = delete;
+    Wind8Movement(Wind8 wind8, DrawnMovementStyle drawn_movement_style) : wind8(wind8), drawn_movement_style(drawn_movement_style), frames_since_last_wind8_move(0) {}
+    Wind8 wind8;
+    DrawnMovementStyle drawn_movement_style;
+    int frames_since_last_wind8_move;
+};
 
 class MoveableEntity : Entity {
 public:
-};
-    void Move(int fps) final;
-    virtual void Update() = 0;
+    MoveableEntity(EntityAlignment alignment, std::variant<GridCellIndex, GridContinuousPosition> pos, const std::variant<Wind8Movement, float> &movement_angle, WallCollisionBehavior wcb) : Entity(alignment, pos), movement_angle(movement_angle), wcb(wcb) {}
+    void Move(const GridCellIndex &grid_dimensions, int fps);
+    virtual void Update() = 0; // called each time the entity moves
 protected:
-    Wind8 wind8; // NoDirection if using velocity_angle_deg
-    float velocity_angle_deg; // NAN if using wind8 -- range: (-180, 180] where 0 is east and + is ccw
-    float cell_size_per_second; // TODO: determine how to handle different screen sizes equally. Perhaps every x and y value in the grid should be in [0, 1], except then there's a conversion between x and y... hmmmmm
+    std::variant<Wind8Movement, float> movement_angle; // is 0 if Entity::alignment == EntityAlignment::Indexed and 1 otherwise (1 is deg ccw from east)
+    WallCollisionBehavior wcb;
+    float cell_size_per_second = 0.0; // 0 if not moving currently, obviously
 };
 
 #endif // MOVEABLE_ENTITY_HPP

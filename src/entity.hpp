@@ -4,10 +4,19 @@
 #define ENTITY_HPP
 
 #include "position.hpp"
+#include <variant>
+
+enum class EntityAlignment {
+    Indexed,
+    Continuous,
+};
 
 class Entity {
 public:
+    Entity(EntityAlignment alignment, std::variant<GridCellIndex, GridContinuousPosition> pos) : alignment(alignment), pos(pos) {}
     virtual void Draw(const DrawPosition &pos) = 0;
+    EntityAlignment alignment;
+    std::variant<GridCellIndex, GridContinuousPosition> pos;
     bool marked_for_deletion = false;
 };
 
