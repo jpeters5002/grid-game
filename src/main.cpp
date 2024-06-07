@@ -2,6 +2,7 @@
 #include <raylib.h>
 
 #include "bouncing_pellet.hpp"
+#include "character.hpp"
 
 void Draw2DGrid(int topLeftX, int topLeftY, int width, int height,
     int numCellsX, int numCellsY){
@@ -40,12 +41,14 @@ int main()
     SetTargetFPS(fps);
 
     BouncingPellet bp(3.0, 9.0, 70.8);
+    Character c(GridCellIndex(grid_dimensions.x / 2, grid_dimensions.y - 2), Angle(AngleType::Wind8, Wind8::U));
     
     while(WindowShouldClose() == false)
     {
         BeginDrawing();
         //Updating
         bp.Move(grid_dimensions, fps);
+        c.Update(fps);
 
         //Drawing
         Rectangle border = Rectangle{borderXPos, borderYPos, borderWidth,
@@ -57,6 +60,7 @@ int main()
         DrawRectangleLinesEx(border, 3, GREEN);
 
         bp.Draw(DrawPosition(borderXPos, borderYPos), (float)borderWidth / grid_dimensions.x, (float)borderHeight / grid_dimensions.y);
+        c.Draw(DrawPosition(borderXPos, borderYPos), (float)borderWidth / grid_dimensions.x, (float)borderHeight / grid_dimensions.y);
 
         EndDrawing();
     }
