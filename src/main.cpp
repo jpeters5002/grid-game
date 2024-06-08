@@ -1,6 +1,8 @@
 #include <iostream>
 #include <raylib.h>
 
+#include "bouncing_pellet.hpp"
+
 void Draw2DGrid(int topLeftX, int topLeftY, int width, int height,
     int numCellsX, int numCellsY){
     float cellWidth = (float)width / numCellsX;
@@ -32,26 +34,33 @@ int main()
     float borderXPos {(windowWidth_f - borderWidth) / 2};
     float borderYPos {(windowHeight_f - borderHeight) / 2};
     
+    const GridCellIndex grid_dimensions(5, 10);
+    const int fps = 60;
     InitWindow(windowWidth, windowHeight, "Game");
-    SetTargetFPS(60);
+    SetTargetFPS(fps);
+
+    BouncingPellet bp(3.0, 9.0, 70.8);
     
     while(WindowShouldClose() == false)
     {
         BeginDrawing();
         //Updating
-        
+        bp.Move(grid_dimensions, fps);
+
         //Drawing
         Rectangle border = Rectangle{borderXPos, borderYPos, borderWidth,
             borderHeight};
-        
+
         ClearBackground(BLACK);
         Draw2DGrid(borderXPos, borderYPos, borderWidth, borderHeight,
-            5, 10);
+            grid_dimensions.x, grid_dimensions.y);
         DrawRectangleLinesEx(border, 3, GREEN);
-        
+
+        bp.Draw(DrawPosition(borderXPos, borderYPos), (float)borderWidth / grid_dimensions.x, (float)borderHeight / grid_dimensions.y);
+
         EndDrawing();
     }
-    
+
     CloseWindow();
     return 0;
 }
