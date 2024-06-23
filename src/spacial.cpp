@@ -105,3 +105,34 @@ float angledeg_mirror(bool over_x_axis, float val) {
             return unclamped_mirror;
     }
 }
+
+ContinuousAngle Angle::GetCts() const {
+    switch (angle_type) {
+        case AngleType::Wind8:
+            switch (std::get<0>(angle)) {
+                case Wind8::NoDirection:
+                    assert(!"GetCts called on Wind8::NoDirection");
+                    return 0.0;
+                case Wind8::U:
+                    return 90.0;
+                case Wind8::UR:
+                    return 45.0;
+                case Wind8::R:
+                    return 0.0;
+                case Wind8::DR:
+                    return -45.0;
+                case Wind8::D:
+                    return -90.0;
+                case Wind8::DL:
+                    return -135.0;
+                case Wind8::L:
+                    return 180.0;
+                case Wind8::UL:
+                    return 135.0;
+            }
+        case AngleType::Continuous:
+            return std::get<1>(angle);
+    }
+    assert(!"unreachable");
+    return 0.0;
+}

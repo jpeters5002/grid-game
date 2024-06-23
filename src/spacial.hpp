@@ -61,6 +61,7 @@ class Angle {
 public:
     Angle() = delete;
     Angle(AngleType angle_type, const std::variant<Wind8, ContinuousAngle> &angle) : angle_type(angle_type), angle(angle) {}
+    ContinuousAngle GetCts() const;
     AngleType angle_type;
     std::variant<Wind8, ContinuousAngle> angle;
 };
