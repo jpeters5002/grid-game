@@ -6,7 +6,7 @@
 #define SPEED_CELL_SIZE_PER_SECOND 2.0
 #define DEFAULT_COMMAND_COOLDOWN_SECONDS 2.0
 
-Character::Character(const GridCellIndex &pos, const Angle &facing_angle) : MoveableEntity(EntityAlignment::Indexed, pos, Movement(AngleType::Wind8, Wind8MovementInfo(Wind8::NoDirection, DrawnMovementStyle::SmoothDrawnSuddenLogic), SPEED_CELL_SIZE_PER_SECOND), WallCollisionBehavior::Clamp), facing_angle(facing_angle), command_cooldown(DEFAULT_COMMAND_COOLDOWN_SECONDS) {}
+Character::Character(const GridCellIndex &pos, const Angle &facing_angle) : Entity(EntityAlignment::Indexed, pos, Movement(AngleType::Wind8, Wind8MovementInfo(Wind8::NoDirection, DrawnMovementStyle::SmoothDrawnSuddenLogic), SPEED_CELL_SIZE_PER_SECOND), WallCollisionBehavior::Clamp), facing_angle(facing_angle), command_cooldown(DEFAULT_COMMAND_COOLDOWN_SECONDS) {}
 
 void Character::Draw(const DrawPosition &grid_tl_pos, float grid_cell_width, float grid_cell_height) {
     GridCellIndex &p = std::get<0>(this->pos);

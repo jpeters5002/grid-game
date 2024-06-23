@@ -1,9 +1,9 @@
-#include "moveable_entity.hpp"
+#include "entity.hpp"
 
 #include <cmath>
 #include <cassert>
 
-void MoveableEntity::Move(const GridCellIndex &grid_dimensions, int fps) {
+void Entity::Move(const GridCellIndex &grid_dimensions, int fps) {
     switch (alignment) {
         case EntityAlignment::Indexed: {
             // ASSUMPTION: limit to 1 wind8 movement per frame

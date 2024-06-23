@@ -5,7 +5,7 @@
 
 #define SPEED_CELL_SIZE_PER_SECOND 3.0
 
-BouncingPellet::BouncingPellet(float start_x, float start_y, float angle) : MoveableEntity(EntityAlignment::Continuous, GridContinuousPosition(start_x, start_y), Movement(AngleType::Continuous, angle, SPEED_CELL_SIZE_PER_SECOND), WallCollisionBehavior::Bounce) {}
+BouncingPellet::BouncingPellet(float start_x, float start_y, float angle) : Entity(EntityAlignment::Continuous, GridContinuousPosition(start_x, start_y), Movement(AngleType::Continuous, angle, SPEED_CELL_SIZE_PER_SECOND), WallCollisionBehavior::Bounce) {}
 
 void BouncingPellet::Draw(const DrawPosition &grid_tl_pos, float grid_cell_width, float grid_cell_height) {
     GridContinuousPosition &p = std::get<1>(pos);
