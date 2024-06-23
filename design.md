@@ -10,9 +10,9 @@ small amount of credits earned over time, with killing enemies being the primary
 
 # COMMANDS
 
-move <left|right|^up|^down>
-shoot [^direction] (or maybe auto shoot at interval)
-^get\_nearest\_enemy [^type]
+- move <left|right|^up|^down> (Syntax: move(l), move(r), etc.)
+- shoot [^direction] (or maybe auto shoot at interval) (Syntax: fire(), altfire()[?], ^aim(<angle/enemy>))
+- ^get\_nearest\_enemy [^type] (Syntax: scan([enemy\_type]))
 
 # ONE-TIME-UPGRADES (other than the indicated in commands)
 
