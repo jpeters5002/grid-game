@@ -1,117 +1,14 @@
-#include "moveable_entity.hpp"
+#include "entity.hpp"
 
 #include <cmath>
 #include <cassert>
 
-Wind8Distance Wind8_distance(Wind8 val) {
-    switch (val) {
-        case Wind8::NoDirection:
-            return Wind8Distance::Zero;
-        case Wind8::U:
-        case Wind8::R:
-        case Wind8::D:
-        case Wind8::L:
-            return Wind8Distance::One;
-        case Wind8::UR:
-        case Wind8::DR:
-        case Wind8::DL:
-        case Wind8::UL:
-            return Wind8Distance::Sqrt2;
-    }
-    assert(!"unreachable");
-    return Wind8Distance::Zero;
-}
-
-GridCellIndex Wind8_addable_movement(Wind8 val) {
-    switch (val) {
-        case Wind8::NoDirection:
-            return GridCellIndex(0, 0);
-        case Wind8::U:
-            return GridCellIndex(0, -1);
-        case Wind8::UR:
-            return GridCellIndex(1, -1);
-        case Wind8::R:
-            return GridCellIndex(1, 0);
-        case Wind8::DR:
-            return GridCellIndex(1, 1);
-        case Wind8::D:
-            return GridCellIndex(0, 1);
-        case Wind8::DL:
-            return GridCellIndex(-1, 1);
-        case Wind8::L:
-            return GridCellIndex(-1, 0);
-        case Wind8::UL:
-            return GridCellIndex(-1, -1);
-    }
-    assert(!"unreachable");
-    return GridCellIndex(0, 0);
-}
-
-Wind8 Wind8_mirror(bool over_x_axis, Wind8 val) {
-    if (over_x_axis) {
-        switch (val) {
-            case Wind8::NoDirection:
-                return Wind8::NoDirection;
-            case Wind8::U:
-                return Wind8::D;
-            case Wind8::UR:
-                return Wind8::DR;
-            case Wind8::R:
-                return Wind8::R;
-            case Wind8::DR:
-                return Wind8::UR;
-            case Wind8::D:
-                return Wind8::U;
-            case Wind8::DL:
-                return Wind8::UL;
-            case Wind8::L:
-                return Wind8::L;
-            case Wind8::UL:
-                return Wind8::DL;
-        }
-    } else {
-        switch (val) {
-            case Wind8::NoDirection:
-                return Wind8::NoDirection;
-            case Wind8::U:
-                return Wind8::U;
-            case Wind8::UR:
-                return Wind8::UL;
-            case Wind8::R:
-                return Wind8::L;
-            case Wind8::DR:
-                return Wind8::DL;
-            case Wind8::D:
-                return Wind8::D;
-            case Wind8::DL:
-                return Wind8::DR;
-            case Wind8::L:
-                return Wind8::R;
-            case Wind8::UL:
-                return Wind8::UR;
-        }
-    }
-    assert(!"unreachable");
-    return Wind8::NoDirection;
-}
-
-float angledeg_mirror(bool over_x_axis, float val) {
-    if (over_x_axis) {
-        return -val;
-    } else {
-        float unclamped_mirror = ((val - 90.0) * (-1.0)) + 90.0;
-        if (unclamped_mirror > 180.0)
-            return unclamped_mirror - 360.0;
-        else
-            return unclamped_mirror;
-    }
-}
-
-void MoveableEntity::Move(const GridCellIndex &grid_dimensions, int fps) {
+void Entity::Move(const GridCellIndex &grid_dimensions, int fps) {
     switch (alignment) {
         case EntityAlignment::Indexed: {
             // ASSUMPTION: limit to 1 wind8 movement per frame
-            Wind8Movement &w8mov = std::get<0>(movement_angle);
+            assert(movement.angle_type == AngleType::Wind8);
+            Wind8MovementInfo &w8mov = std::get<0>(movement.angle);
             Wind8Distance dist = Wind8_distance(w8mov.wind8);
             float dist_val = 1.0;
             switch (dist) {
@@ -124,7 +21,7 @@ void MoveableEntity::Move(const GridCellIndex &grid_dimensions, int fps) {
                     dist_val = SQRT2;
                     break;
             }
-            float frames_until_move = (dist_val / cell_size_per_second) / fps;
+            float frames_until_move = (dist_val / movement.speed) / fps;
             if (w8mov.frames_since_last_wind8_move >= frames_until_move) {
                 GridCellIndex to_add = Wind8_addable_movement(w8mov.wind8);
                 GridCellIndex &idx_pos = std::get<0>(this->pos);
@@ -162,19 +59,18 @@ void MoveableEntity::Move(const GridCellIndex &grid_dimensions, int fps) {
                     }
                 }
                 w8mov.frames_since_last_wind8_move = 0;
-                Update();
             } else {
                 w8mov.frames_since_last_wind8_move++;
             }
             break;
         }
         case EntityAlignment::Continuous: {
-            // TODO: move the entity cell_size_per_second / fps in the direction indicated by std::get<1>(movement_angle), accounting for grid dims
+            assert(movement.angle_type == AngleType::Continuous);
             GridContinuousPosition &cts_pos = std::get<1>(pos);
-            float &angle = std::get<1>(movement_angle);
+            float &angle = std::get<1>(movement.angle);
             const float angle_rad = angle * (M_PI/180);
-            const float dx = cos(angle_rad) * (cell_size_per_second / fps);
-            const float dy = sin(angle_rad) * (cell_size_per_second / fps) * (-1.0); // times -1 because y goes down in CS
+            const float dx = cos(angle_rad) * (movement.speed / fps);
+            const float dy = sin(angle_rad) * (movement.speed / fps) * (-1.0); // times -1 because y goes down in CS
             cts_pos.x += dx;
             cts_pos.y += dy;
             // bounds check

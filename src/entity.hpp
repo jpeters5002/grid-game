@@ -5,6 +5,7 @@
 
 #include "position.hpp"
 #include <variant>
+#include "spacial.hpp"
 
 enum class EntityAlignment {
     Indexed,
@@ -13,11 +14,16 @@ enum class EntityAlignment {
 
 class Entity {
 public:
-    Entity(EntityAlignment alignment, std::variant<GridCellIndex, GridContinuousPosition> pos) : alignment(alignment), pos(pos) {}
+    Entity(EntityAlignment alignment, std::variant<GridCellIndex, GridContinuousPosition> pos, const Movement &movement = Movement(AngleType::Continuous, std::variant<Wind8MovementInfo, ContinuousAngle>(0.0f), 0.0), WallCollisionBehavior wcb = WallCollisionBehavior::Ignore) : alignment(alignment), pos(pos), movement(movement), wcb(wcb) {}
     virtual void Draw(const DrawPosition &grid_tl_pos, float grid_cell_width, float grid_cell_height) = 0;
+    void Move(const GridCellIndex &grid_dimensions, int fps);
+    virtual void Update(int fps) = 0; // called each frame
     EntityAlignment alignment;
     std::variant<GridCellIndex, GridContinuousPosition> pos;
     bool marked_for_deletion = false;
+protected:
+    Movement movement;
+    WallCollisionBehavior wcb;
 };
 
 #endif // ENTITY_HPP
