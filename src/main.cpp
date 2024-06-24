@@ -42,9 +42,25 @@ int main()
 
     BouncingPellet bp(3.0, 9.0, 70.8);
     Character c(GridCellIndex(grid_dimensions.x / 2, grid_dimensions.y - 2), Angle(AngleType::Wind8, Wind8::U));
+    std::string buffer;
     
     while(WindowShouldClose() == false)
     {
+        while(int userInput = GetKeyPressed())
+        {
+            switch (userInput) {
+                case KEY_BACKSPACE:
+                    if(!buffer.empty())
+                        buffer.pop_back();
+                    break;
+                default:
+                    break;
+            }
+        }
+        while(int userInput = GetCharPressed())
+        {
+            buffer.push_back((char)userInput);
+        }
         BeginDrawing();
         //Updating
         bp.Move(grid_dimensions, fps);
@@ -61,7 +77,8 @@ int main()
 
         bp.Draw(DrawPosition(borderXPos, borderYPos), (float)borderWidth / grid_dimensions.x, (float)borderHeight / grid_dimensions.y);
         c.Draw(DrawPosition(borderXPos, borderYPos), (float)borderWidth / grid_dimensions.x, (float)borderHeight / grid_dimensions.y);
-
+        DrawText(buffer.c_str(), 0, 0, 24, WHITE);
+        
         EndDrawing();
     }
 
