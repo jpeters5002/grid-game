@@ -30,5 +30,8 @@ $(PROG): $(OBJECTS) $(OUTPUT)
 $(OBJ)/%.o: $(SRC)/%.cpp $(OBJ)
 	$(COMPILE.cpp) $<
 
+run: $(PROG)
+	./$(PROG)
+
 clean:
 	rm -f $(OUTPUT)/* $(OBJ)/* && rmdir $(OUTPUT) $(OBJ)
