@@ -57,6 +57,9 @@ int main()
                     break;
             }
         }
+        if (IsKeyPressedRepeat(KEY_BACKSPACE))
+            if (!buffer.empty())
+                buffer.pop_back();
         while(int userInput = GetCharPressed())
         {
             buffer.push_back((char)userInput);
