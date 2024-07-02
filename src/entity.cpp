@@ -10,7 +10,7 @@ void Entity::Move(const GridCellIndex &grid_dimensions, int fps) {
             assert(movement.angle_type == AngleType::Wind8);
             Wind8MovementInfo &w8mov = std::get<0>(movement.angle);
             Wind8Distance dist = Wind8_distance(w8mov.wind8);
-            float dist_val = 1.0;
+            double dist_val = 1.0;
             switch (dist) {
                 case Wind8Distance::Zero:
                     assert(!"unreachable");
@@ -21,7 +21,7 @@ void Entity::Move(const GridCellIndex &grid_dimensions, int fps) {
                     dist_val = SQRT2;
                     break;
             }
-            float frames_until_move = (dist_val / movement.speed) / fps;
+            double frames_until_move = (dist_val / movement.speed) / fps;
             if (w8mov.frames_since_last_wind8_move >= frames_until_move) {
                 GridCellIndex to_add = Wind8_addable_movement(w8mov.wind8);
                 GridCellIndex &idx_pos = std::get<0>(this->pos);
@@ -67,14 +67,14 @@ void Entity::Move(const GridCellIndex &grid_dimensions, int fps) {
         case EntityAlignment::Continuous: {
             assert(movement.angle_type == AngleType::Continuous);
             GridContinuousPosition &cts_pos = std::get<1>(pos);
-            float &angle = std::get<1>(movement.angle);
-            const float angle_rad = angle * (M_PI/180);
-            const float dx = cos(angle_rad) * (movement.speed / fps);
-            const float dy = sin(angle_rad) * (movement.speed / fps) * (-1.0); // times -1 because y goes down in CS
+            double &angle = std::get<1>(movement.angle);
+            const double angle_rad = angle * (M_PI/180);
+            const double dx = cos(angle_rad) * (movement.speed / fps);
+            const double dy = sin(angle_rad) * (movement.speed / fps) * (-1.0); // times -1 because y goes down in CS
             cts_pos.x += dx;
             cts_pos.y += dy;
             // bounds check
-            float *vals[2] = {&cts_pos.x, &cts_pos.y};
+            double *vals[2] = {&cts_pos.x, &cts_pos.y};
             const int bounds[2] = {grid_dimensions.x, grid_dimensions.y};
             for (int i = 0; i < 2; i++) {
                 if (*vals[i] < 0) {

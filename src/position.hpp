@@ -26,9 +26,9 @@ public:
 class GridContinuousPosition {
 public:
     GridContinuousPosition() = delete;
-    GridContinuousPosition(float x, float y) : x(x), y(y) {}
-    float x;
-    float y;
+    GridContinuousPosition(double x, double y) : x(x), y(y) {}
+    double x;
+    double y;
 };
 
 #endif // POSITION_HPP

@@ -6,8 +6,8 @@
 
 void Draw2DGrid(int topLeftX, int topLeftY, int width, int height,
     int numCellsX, int numCellsY){
-    float cellWidth = (float)width / numCellsX;
-    float cellHeight = (float)height / numCellsY;
+    double cellWidth = (double)width / numCellsX;
+    double cellHeight = (double)height / numCellsY;
     
     for(int x = 1; x < numCellsX; x++)
     {
@@ -27,13 +27,13 @@ int main()
 {
     int windowWidth {1920};
     int windowHeight {1080};
-    float windowWidth_f {(float)windowWidth};
-    float windowHeight_f {(float)windowHeight};
+    double windowWidth_f {(double)windowWidth};
+    double windowHeight_f {(double)windowHeight};
     
-    float borderWidth {windowWidth_f / 3};
-    float borderHeight {windowHeight_f - 100};
-    float borderXPos {(windowWidth_f - borderWidth) / 2};
-    float borderYPos {(windowHeight_f - borderHeight) / 2};
+    double borderWidth {windowWidth_f / 3};
+    double borderHeight {windowHeight_f - 100};
+    double borderXPos {(windowWidth_f - borderWidth) / 2};
+    double borderYPos {(windowHeight_f - borderHeight) / 2};
     
     const GridCellIndex grid_dimensions(5, 10);
     const int fps = 60;
@@ -67,16 +67,16 @@ int main()
         c.Update(fps);
 
         //Drawing
-        Rectangle border = Rectangle{borderXPos, borderYPos, borderWidth,
-            borderHeight};
+        Rectangle border = Rectangle{(float)borderXPos, (float)borderYPos, (float)borderWidth,
+            (float)borderHeight};
 
         ClearBackground(BLACK);
         Draw2DGrid(borderXPos, borderYPos, borderWidth, borderHeight,
             grid_dimensions.x, grid_dimensions.y);
         DrawRectangleLinesEx(border, 3, GREEN);
 
-        bp.Draw(DrawPosition(borderXPos, borderYPos), (float)borderWidth / grid_dimensions.x, (float)borderHeight / grid_dimensions.y);
-        c.Draw(DrawPosition(borderXPos, borderYPos), (float)borderWidth / grid_dimensions.x, (float)borderHeight / grid_dimensions.y);
+        bp.Draw(DrawPosition(borderXPos, borderYPos), (double)borderWidth / grid_dimensions.x, (double)borderHeight / grid_dimensions.y);
+        c.Draw(DrawPosition(borderXPos, borderYPos), (double)borderWidth / grid_dimensions.x, (double)borderHeight / grid_dimensions.y);
         DrawText(buffer.c_str(), 0, 0, 24, WHITE);
         
         EndDrawing();

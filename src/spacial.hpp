@@ -7,8 +7,8 @@
 
 #include <variant>
 
-typedef float ContinuousAngle;
-typedef float SpeedCellSizePerSecond;
+typedef double ContinuousAngle;
+typedef double SpeedCellSizePerSecond;
 
 // the "smooth" option is indicated by EntityAlignment::Continuous -- these options specify between how 
 enum class DrawnMovementStyle {
@@ -43,7 +43,7 @@ enum class Wind8Distance {
     Sqrt2,
 };
 Wind8Distance Wind8_distance(Wind8 val);
-static const float SQRT2 = 1.41421356237;
+static const double SQRT2 = 1.41421356237;
 GridCellIndex Wind8_addable_movement(Wind8 val);
 Wind8 Wind8_mirror(bool over_x_axis, Wind8 val);
 ContinuousAngle angledeg_mirror(bool over_x_axis, ContinuousAngle val);
