@@ -1,0 +1,7 @@
+#ifndef LOOP_LIMIT_HPP
+#define LOOP_LIMIT_HPP
+
+#define HARD_LOOP_LIMIT (10'000'000)
+
+#endif // LOOP_LIMIT_HPP
+

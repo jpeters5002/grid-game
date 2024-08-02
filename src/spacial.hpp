@@ -5,6 +5,7 @@
 
 #include "position.hpp"
 
+#include <cassert>
 #include <variant>
 
 typedef double ContinuousAngle;
@@ -23,7 +24,6 @@ enum class WallCollisionBehavior {
 };
 
 enum class Wind8 {
-    NoDirection,
     U,
     UR,
     R,
@@ -32,7 +32,33 @@ enum class Wind8 {
     DL,
     L,
     UL,
+    NoDirection,
 };
+constexpr const char *str_from_wind8(Wind8 val) {
+    switch (val)
+    {
+        case Wind8::U:
+            return "u";
+        case Wind8::UR:
+            return "ur";
+        case Wind8::R:
+            return "r";
+        case Wind8::DR:
+            return "dr";
+        case Wind8::D:
+            return "d";
+        case Wind8::DL:
+            return "dl";
+        case Wind8::L:
+            return "l";
+        case Wind8::UL:
+            return "ul";
+        case Wind8::NoDirection:
+            return "nodirection";
+    }
+    assert(!"unreachable");
+    return "[INVALID ENUM VALUE]";
+}
 enum class AngleType {
     Wind8,
     Continuous,

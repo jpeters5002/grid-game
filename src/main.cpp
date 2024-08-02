@@ -3,6 +3,7 @@
 
 #include "bouncing_pellet.hpp"
 #include "character.hpp"
+#include "script_handler.hpp"
 
 void Draw2DGrid(int topLeftX, int topLeftY, int width, int height,
     int numCellsX, int numCellsY){
@@ -41,9 +42,10 @@ int main()
     SetTargetFPS(fps);
 
     BouncingPellet bp(3.0, 9.0, 70.8);
-    Character c(GridCellIndex(grid_dimensions.x / 2, grid_dimensions.y - 2), Angle(AngleType::Wind8, Wind8::U));
     std::string buffer;
-    
+    script::ScriptHandler sh(buffer);
+    Character c(sh, GridCellIndex(grid_dimensions.x / 2, grid_dimensions.y - 2), Angle(AngleType::Wind8, Wind8::U));
+
     while(WindowShouldClose() == false)
     {
         while(int userInput = GetKeyPressed())
@@ -52,6 +54,9 @@ int main()
                 case KEY_BACKSPACE:
                     if(!buffer.empty())
                         buffer.pop_back();
+                    break;
+                case KEY_F3:
+                    c.QueueNextCommand();
                     break;
                 default:
                     break;
@@ -68,6 +73,7 @@ int main()
         //Updating
         bp.Move(grid_dimensions, fps);
         c.Update(fps);
+        c.Move(grid_dimensions, fps);
 
         //Drawing
         Rectangle border = Rectangle{(float)borderXPos, (float)borderYPos, (float)borderWidth,

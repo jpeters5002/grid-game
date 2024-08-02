@@ -13,7 +13,6 @@ void Entity::Move(const GridCellIndex &grid_dimensions, int fps) {
             double dist_val = 1.0;
             switch (dist) {
                 case Wind8Distance::Zero:
-                    assert(!"unreachable");
                     break;
                 case Wind8Distance::One:
                     break;
