@@ -94,11 +94,11 @@ Wind8 Wind8_mirror(bool over_x_axis, Wind8 val) {
     return Wind8::NoDirection;
 }
 
-float angledeg_mirror(bool over_x_axis, float val) {
+double angledeg_mirror(bool over_x_axis, double val) {
     if (over_x_axis) {
         return -val;
     } else {
-        float unclamped_mirror = ((val - 90.0) * (-1.0)) + 90.0;
+        double unclamped_mirror = ((val - 90.0) * (-1.0)) + 90.0;
         if (unclamped_mirror > 180.0)
             return unclamped_mirror - 360.0;
         else
