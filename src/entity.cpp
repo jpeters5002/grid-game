@@ -76,12 +76,17 @@ void Entity::Move(const GridCellIndex &grid_dimensions, int fps) {
             double *vals[2] = {&cts_pos.x, &cts_pos.y};
             const int bounds[2] = {grid_dimensions.x, grid_dimensions.y};
             for (int i = 0; i < 2; i++) {
-                if (*vals[i] < 0) {
+                
+                double westNorthOffset = (i == 0) ? neswCollisionOffsets[3] : neswCollisionOffsets[0];
+                double eastSouthOffset = (i == 0) ? neswCollisionOffsets[1] : neswCollisionOffsets[2];
+
+                if (*vals[i] - westNorthOffset < 0) {
                     switch (wcb) {
                         case WallCollisionBehavior::Bounce:
                             // TODO: handle multiple bounces in one frame case
                             // TODO: handle the case where crossed tiles are wanted in order (ray casting here we go!)
-                            *vals[i] *= -1.0;
+                            //*vals[i] *= -1.0;
+                            *vals[i] -= 2 * (*vals[i] - westNorthOffset);
                             angle = angledeg_mirror(i != 0, angle);
                             break;
                         case WallCollisionBehavior::Clamp:
@@ -91,11 +96,12 @@ void Entity::Move(const GridCellIndex &grid_dimensions, int fps) {
                             break;
                     }
                 }
-                else if (*vals[i] > bounds[i]) {
+                else if (*vals[i] + eastSouthOffset > bounds[i]) {
                     switch (wcb) {
                         case WallCollisionBehavior::Bounce:
                             // TODO: see above "Bounce" todos
-                            *vals[i] = bounds[i] * 2 - *vals[i];
+                            //*vals[i] = bounds[i] * 2 - *vals[i];
+                            *vals[i] -= 2 * (*vals[i] + eastSouthOffset - bounds[i]);
                             angle = angledeg_mirror(i != 0, angle);
                             break;
                         case WallCollisionBehavior::Clamp:

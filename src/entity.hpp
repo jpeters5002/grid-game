@@ -14,7 +14,7 @@ enum class EntityAlignment {
 
 class Entity {
 public:
-    Entity(EntityAlignment alignment, std::variant<GridCellIndex, GridContinuousPosition> pos, const Movement &movement = Movement(AngleType::Continuous, std::variant<Wind8MovementInfo, ContinuousAngle>(0.0f), 0.0), WallCollisionBehavior wcb = WallCollisionBehavior::Ignore) : alignment(alignment), pos(pos), movement(movement), wcb(wcb) {}
+    Entity(EntityAlignment alignment, std::variant<GridCellIndex, GridContinuousPosition> pos, const Movement &movement = Movement(AngleType::Continuous, std::variant<Wind8MovementInfo, ContinuousAngle>(0.0f), 0.0), WallCollisionBehavior wcb = WallCollisionBehavior::Ignore) : alignment(alignment), pos(pos), movement(movement), wcb(wcb), neswCollisionOffsets{0,0,0,0} {}
     virtual void Draw(const DrawPosition &grid_tl_pos, double grid_cell_width, double grid_cell_height) = 0;
     void Move(const GridCellIndex &grid_dimensions, int fps);
     virtual void Update(int fps) = 0; // called each frame
@@ -24,6 +24,7 @@ public:
 protected:
     Movement movement;
     WallCollisionBehavior wcb;
+    double neswCollisionOffsets[4];
 };
 
 #endif // ENTITY_HPP
