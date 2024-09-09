@@ -1,6 +1,6 @@
 # compiler
 CC = g++
-CFLAGS = -Wall
+CFLAGS = -Wall -std=c++17
 LDLIBS  = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 COMPILE.cpp = $(CC) $(CFLAGS) -c -o $@
 
